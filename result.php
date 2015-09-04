@@ -7,14 +7,21 @@ setlocale(LC_MONETARY, 'en_US');
 $name = $_POST["name"];
 $email = $_POST["email"];
 $bootcamp = $_POST["bootcamp"];
+$startDate = $_POST["startDate"];
+$d = new DateTime( $_POST["startDate"] );
+
+//$startDate = date_format($startDate, "mm/dd/Y");
+//echo $startDate;
+//$startDate = date_create( $_POST["startDate"]);
+//$startDate = date_format( $startDate, 2000, 12, 12);
+
 //$tuition = $_POST["tuition"];
 if ($_POST["bootcamp"] == "Part-Time Front-End Bootcamp") {
 	$tuition = 6000;
-	echo "hello";
 } elseif ($_POST["bootcamp"] == "Java Bootcamp" || $_POST["bootcamp"] == "Front-End (Javscript) Bootcamp") {
 	$tuition = 7500;
 } elseif ($_POST["bootcamp"] == ".NET/C# Bootcamp") {
-	$tuition = 7500;
+	$tuition = 6500;
 } else {
 	$tuition = 8500;
 }
@@ -40,7 +47,7 @@ if ($gPeriods != 0){
 ?>
 <div class="container">
 	<h1>Deferred Payment Plan for <?php echo $name; ?></h1>
-	<h2><?php echo $bootcamp; ?></h2>
+	<h2><?php echo $bootcamp . " " . $d->format( 'm/d/Y' ); ?></h2>
 	<h2><?php echo $email; ?></h2>
 		<div class="table-responsive">
 			<table class="table table-bordered">
@@ -119,26 +126,31 @@ if ($gPeriods != 0){
 				</thead>
 				<tbody>
 					<?php
+						
+
 						if ($gPeriods != 0) {
 							
 							for ($i=0; $i < $gPeriods; $i++) { 
+								$d->modify( 'next month' );
 								echo "<tr><td>" . money_format("%(#10.2n",$gAmount) . "</td>";
 								echo "<td>Grace Payment</td>";
-								echo "<td>Due Date</td></tr>";
+								echo "<td>" . $d->format( 'm/d/Y' ) . "</td></tr>";
 							}
 							
 							for ($i=0; $i < ($periods - $gPeriods); $i++) { 
+								$d->modify( 'next month' );
 								echo "<tr><td>" . money_format("%(#10.2n",$monthly) . "</td>";
 								echo "<td>Monthly Payment</td>";
-								echo "<td>Due Date</td></tr>";
+								echo "<td>" . $d->format( 'm/d/Y' ) . "</td></tr>";
 							}
 
 						} else {
 
 							for ($i=0; $i < $periods; $i++) { 
+								$d->modify( 'next month' );
 								echo "<tr><td>" . money_format("%(#10.2n",$monthly) . "</td>";
 								echo "<td>Monthly Payment</td>";
-								echo "<td>Due Date</td></tr>";
+								echo "<td>" . $d->format( 'm/d/Y' ) . "</td></tr>";
 							}
 						}
 

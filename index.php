@@ -11,11 +11,11 @@ include 'includes/functions.php';
         </div>
         <form action="result.php" method="post" class="form-horozontal">
             <div class="row">
-                <div class="col-md-4">
+                <div class="col-md-3">
                      Name: <input type="text" class="form-control" name="name">
                 </div>
-                <div class="col-md-4">E-mail: <input type="email" class="form-control" name="email"></div>
-                <div class="col-md-4">
+                <div class="col-md-3">E-mail: <input type="email" class="form-control" name="email"></div>
+                <div class="col-md-3">
                     Bootcamp: 
                         <select class="form-control" name="bootcamp">
                             <option value=""></option>
@@ -26,15 +26,13 @@ include 'includes/functions.php';
                               <option value=".NET/C# Bootcamp">.NET/C#</option>
                         </select>
                 </div>
+                 <div class="col-md-3">
+                    Start Date:<input type="text" id="startDate" class="form-control" name="startDate">
+                </div>
+
             </div>
             <br>
             <div class="col-md-4 col-md-offset-4">   
-                <!-- Tuition:
-                    <select class="form-control" name="tuition">
-                      <option value="6500">$6,500</option>
-                      <option value="7500" selected>$7,500</option>
-                      <option value="8500">$8,500</option> 
-                    </select><br> -->
                 Scholarship/discount: 
                     <select class="form-control" name="discount">
                         <option value="0" selected>$0</option>
