@@ -8,7 +8,15 @@
     <form action="result.php" method="post">
         Name: <input type="text" name="name"><br>
         E-mail: <input type="text" name="email"><br>
-        Bootcamp: <input type="text" name="bootcamp"><br>
+        Bootcamp: 
+            <select name="bootcamp">
+                <option value=""></option>
+              <option value="Front-End (Javscript) Bootcamp">Front-End</option>
+              <option value="Part-Time Front-End Bootcamp">PTBC</option>
+              <option value="Java Bootcamp">Java</option>
+              <option value="iOS Bootcamp">iOS</option>
+              <option value=".NET/C# Bootcamp">.NET/C#</option>
+            </select><br>
         Tuition:
             <select name="tuition">
               <option value="6500">$6,500</option>
