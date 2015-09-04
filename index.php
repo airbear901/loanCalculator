@@ -44,9 +44,9 @@ include 'includes/functions.php';
                     </select><br>
                 Deposit: 
                     <select class="form-control" name="deposit">
-                        <option value="0" selected>$0</option>
+                        <option value="0">$0</option>
                          <option value="500">$500</option>
-                         <option value="800">$800</option>
+                         <option value="800" selected>$800</option>
                          <option value="1000">$1,000</option>
                          <option value="1100">$1,100</option>
                          <option value="1200">$1,200</option>
@@ -59,7 +59,7 @@ include 'includes/functions.php';
                     </select><br>
                     <div class="checkbox">
                         <label>
-                          <input type="checkbox"> Paid?
+                          <input type="checkbox" name="depositPaid" value="1"> Paid?
                         </label>
                     </div>
                 Interest Rate Per Year: 

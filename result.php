@@ -10,12 +10,6 @@ $bootcamp = $_POST["bootcamp"];
 $startDate = $_POST["startDate"];
 $d = new DateTime( $_POST["startDate"] );
 
-//$startDate = date_format($startDate, "mm/dd/Y");
-//echo $startDate;
-//$startDate = date_create( $_POST["startDate"]);
-//$startDate = date_format( $startDate, 2000, 12, 12);
-
-//$tuition = $_POST["tuition"];
 if ($_POST["bootcamp"] == "Part-Time Front-End Bootcamp") {
 	$tuition = 6000;
 } elseif ($_POST["bootcamp"] == "Java Bootcamp" || $_POST["bootcamp"] == "Front-End (Javscript) Bootcamp") {
@@ -25,6 +19,7 @@ if ($_POST["bootcamp"] == "Part-Time Front-End Bootcamp") {
 } else {
 	$tuition = 8500;
 }
+
 $discount = $_POST["discount"];
 $open = $tuition - $discount;
 $deposit = $_POST["deposit"];
@@ -33,6 +28,7 @@ $periods = $_POST["periods"];
 $gPeriods = $_POST["gPeriods"];
 $gAmount = $_POST["gAmount"];
 $principal = $tuition - $discount - $deposit;
+
 if ($gPeriods != 0){
 	$a = payment($apr,$periods,$principal);
 	$monthly = (($a * $periods) - ($gPeriods * $gAmount)) / ($periods - $gPeriods);
@@ -41,14 +37,12 @@ if ($gPeriods != 0){
 	$monthly = payment($apr,$periods,$principal);
 	$total = $monthly * $periods + $deposit;
 }
-
- 
 	
 ?>
 <div class="container">
-	<h1>Deferred Payment Plan for <?php echo $name; ?></h1>
-	<h2><?php echo $bootcamp . " " . $d->format( 'm/d/Y' ); ?></h2>
-	<h2><?php echo $email; ?></h2>
+	<h1>Deferred Payment Plan <?php if($name) { echo "for " . $name;} else {} ?></h1>
+	<h3><?php echo $bootcamp . " " . $d->format( 'm/d/Y' ); ?></h3>
+	<h3><?php // echo $email; ?></h3>
 		<div class="table-responsive">
 			<table class="table table-bordered">
 				<thead>
@@ -77,7 +71,18 @@ if ($gPeriods != 0){
 					<tr>
 						<td><?php echo money_format("%(#10.2n",$deposit); ?></td>
 						<td>Deposit</td>
-						<td>Due Immediately</td>
+						<td>
+							<?php 
+								if(isset($_POST['depositPaid'])) 
+								{
+								    echo "Paid";
+								}
+								else
+								{
+								    echo "Due Immediately";
+								}    
+							?>
+						</td>
 					</tr>
 					<tr>
 						<td><?php echo money_format("%(#10.2n",$principal); ?></td>
@@ -115,19 +120,18 @@ if ($gPeriods != 0){
 			</table>
 
 			<br>
-
+			<h2>Payment Schedule</h2>
 			<table class="table">
 				<thead>
 					<tr>
-						<th>Payment Amount</th>
+						<th>Amount</th>
 						<th>Description</th>
 						<th>Due Date</th>
 					</tr>
 				</thead>
 				<tbody>
-					<?php
+					<?php				
 						
-
 						if ($gPeriods != 0) {
 							
 							for ($i=0; $i < $gPeriods; $i++) { 
