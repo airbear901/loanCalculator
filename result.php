@@ -21,7 +21,7 @@
 	$gPeriods = $_POST["gPeriods"];
 	$gAmount = $_POST["gAmount"];
 	$principal = $tuition - $discount - $deposit;
-	if (isset($gPeriods)){
+	if ($gPeriods != 0){
 		$a = payment($apr,$periods,$principal);
 		$monthly = (($a * $periods) - ($gPeriods * $gAmount)) / ($periods - $gPeriods);
 		$total = $a * $periods + $deposit;
@@ -78,7 +78,7 @@
 		<td>Payment Periods</td>
 		<td></td>
 	</tr>
-	<? if ($gPeriods): ?>
+	<? if ($gPeriods != 0): ?>
 	<tr>
 		<td><?php echo $gPeriods; ?></td>
 		<td>Grace Periods</td>
@@ -106,7 +106,7 @@
 		<th>Due Date</th>
 	</tr>	
 <?php
-	if (isset($gPeriods)) {
+	if ($gPeriods != 0) {
 		
 		for ($i=0; $i < $gPeriods; $i++) { 
 			echo "<tr><td>" . $gAmount . "</td>";
