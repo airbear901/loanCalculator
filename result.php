@@ -1,136 +1,152 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-	<meta charset="UTF-8">
-	<title>Document</title>
-</head>
-<body>
 <?php
-	include 'includes/functions.php';
+include 'includes/header.php';
+include 'includes/functions.php';
 
-	//declare variables
-	$name = $_POST["name"];
-	$email = $_POST["email"];
-	$bootcamp = $_POST["bootcamp"];
-	$tuition = $_POST["tuition"];
-	$discount = $_POST["discount"];
-	$open = $tuition - $discount;
-	$deposit = $_POST["deposit"];
-	$apr = $_POST["apr"] / 100;
-	$periods = $_POST["periods"];
-	$gPeriods = $_POST["gPeriods"];
-	$gAmount = $_POST["gAmount"];
-	$principal = $tuition - $discount - $deposit;
-	if ($gPeriods != 0){
-		$a = payment($apr,$periods,$principal);
-		$monthly = (($a * $periods) - ($gPeriods * $gAmount)) / ($periods - $gPeriods);
-		$total = $a * $periods + $deposit;
-	} else {
-		$monthly = payment($apr,$periods,$principal);
-		$total = $monthly * $periods + $deposit;
-	}
-	
+//declare variables
+setlocale(LC_MONETARY, 'en_US');
+$name = $_POST["name"];
+$email = $_POST["email"];
+$bootcamp = $_POST["bootcamp"];
+//$tuition = $_POST["tuition"];
+if ($_POST["bootcamp"] == "Part-Time Front-End Bootcamp") {
+	$tuition = 6000;
+	echo "hello";
+} elseif ($_POST["bootcamp"] == "Java Bootcamp" || $_POST["bootcamp"] == "Front-End (Javscript) Bootcamp") {
+	$tuition = 7500;
+} elseif ($_POST["bootcamp"] == ".NET/C# Bootcamp") {
+	$tuition = 7500;
+} else {
+	$tuition = 8500;
+}
+$discount = $_POST["discount"];
+$open = $tuition - $discount;
+$deposit = $_POST["deposit"];
+$apr = $_POST["apr"] / 100;
+$periods = $_POST["periods"];
+$gPeriods = $_POST["gPeriods"];
+$gAmount = $_POST["gAmount"];
+$principal = $tuition - $discount - $deposit;
+if ($gPeriods != 0){
+	$a = payment($apr,$periods,$principal);
+	$monthly = (($a * $periods) - ($gPeriods * $gAmount)) / ($periods - $gPeriods);
+	$total = $a * $periods + $deposit;
+} else {
+	$monthly = payment($apr,$periods,$principal);
+	$total = $monthly * $periods + $deposit;
+}
+
+ 
 	
 ?>
+<div class="container">
+	<h1>Deferred Payment Plan for <?php echo $name; ?></h1>
+	<h2><?php echo $bootcamp; ?></h2>
+	<h2><?php echo $email; ?></h2>
+		<div class="table-responsive">
+			<table class="table table-bordered">
+				<thead>
+					<tr>
+						<th>Amount</th>
+						<th>Description</th>
+						<th>Notes</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr id="tuition">
+						<td><?php echo money_format("%(#10.2n",$tuition); ?></td>
+						<td>Course Tuition</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td><?php echo money_format("%(#10.2n",$discount); ?></td>
+						<td>Discount / Scholarship</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td><?php echo money_format("%(#10.2n",$open); ?></td>
+						<td>Open Balance</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td><?php echo money_format("%(#10.2n",$deposit); ?></td>
+						<td>Deposit</td>
+						<td>Due Immediately</td>
+					</tr>
+					<tr>
+						<td><?php echo money_format("%(#10.2n",$principal); ?></td>
+						<td>Loan Amount</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td><?php echo ($apr * 100). "%"; ?></td>
+						<td>Interest Rate</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td><?php echo $periods; ?></td>
+						<td>Payment Periods</td>
+						<td></td>
+					</tr>
+					<? if ($gPeriods != 0): ?>
+					<tr>
+						<td><?php echo $gPeriods; ?></td>
+						<td>Grace Periods</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td><?php echo money_format("%(#10.2n",$gAmount); ?></td>
+						<td>Grace Payment</td>
+						<td></td>
+					</tr>
+					<? endif; ?>
+					<tr>
+						<td><?php echo money_format("%(#10.2n",$total); ?></td>
+						<td>Total Tuition</td>
+						<td>Tuition + Interest</td>
+					</tr>
+				</tbody>
+			</table>
 
-<h1>Deferred Payment Plan for <?php echo $name; ?></h1>
-<h2><?php echo $bootcamp; ?></h2>
-<h2><?php echo $email; ?></h2>
+			<br>
 
-<table>
-	<tr>
-		<thead>Amount</thead>
-		<thead>Description</thead>
-		<thead>Notes</thead>
-	</tr>
-	<tr id="tuition">
-		<td><?php echo $tuition; ?></td>
-		<td>Course Tuition</td>
-		<td></td>
-	</tr>
-	<tr>
-		<td><?php echo $discount; ?></td>
-		<td>Discount / Scholarship</td>
-		<td></td>
-	</tr>
-	<tr>
-		<td><?php echo $open; ?></td>
-		<td>Open Balance</td>
-		<td></td>
-	</tr>
-	<tr>
-		<td><?php echo $deposit; ?></td>
-		<td>Deposit</td>
-		<td>Due Immediately</td>
-	</tr>
-	<tr>
-		<td><?php echo $principal; ?></td>
-		<td>Loan Amount</td>
-		<td></td>
-	</tr>
-	<tr>
-		<td><?php echo ($apr * 100). "%"; ?></td>
-		<td>Interest Rate</td>
-		<td></td>
-	</tr>
-	<tr>
-		<td><?php echo $periods; ?></td>
-		<td>Payment Periods</td>
-		<td></td>
-	</tr>
-	<? if ($gPeriods != 0): ?>
-	<tr>
-		<td><?php echo $gPeriods; ?></td>
-		<td>Grace Periods</td>
-		<td></td>
-	</tr>
-	<tr>
-		<td><?php echo $gAmount; ?></td>
-		<td>Grace Payment</td>
-		<td></td>
-	</tr>
-	<? endif; ?>
-	<tr>
-		<td><?php echo $total; ?></td>
-		<td>Total Tuition</td>
-		<td>Tuition + Interest</td>
-	</tr>
-</table>
+			<table class="table">
+				<thead>
+					<tr>
+						<th>Payment Amount</th>
+						<th>Description</th>
+						<th>Due Date</th>
+					</tr>
+				</thead>
+				<tbody>
+					<?php
+						if ($gPeriods != 0) {
+							
+							for ($i=0; $i < $gPeriods; $i++) { 
+								echo "<tr><td>" . money_format("%(#10.2n",$gAmount) . "</td>";
+								echo "<td>Grace Payment</td>";
+								echo "<td>Due Date</td></tr>";
+							}
+							
+							for ($i=0; $i < ($periods - $gPeriods); $i++) { 
+								echo "<tr><td>" . money_format("%(#10.2n",$monthly) . "</td>";
+								echo "<td>Monthly Payment</td>";
+								echo "<td>Due Date</td></tr>";
+							}
 
-<br>
+						} else {
 
-<table>
-	<tr>
-		<th>Payment Amount</th>
-		<th>Description</th>
-		<th>Due Date</th>
-	</tr>	
-<?php
-	if ($gPeriods != 0) {
-		
-		for ($i=0; $i < $gPeriods; $i++) { 
-			echo "<tr><td>" . $gAmount . "</td>";
-			echo "<td>Grace Payment</td>";
-			echo "<td>Due Date</td></tr>";
-		}
-		
-		for ($i=0; $i < ($periods - $gPeriods); $i++) { 
-			echo "<tr><td>" . $monthly . "</td>";
-			echo "<td>Monthly Payment</td>";
-			echo "<td>Due Date</td></tr>";
-		}
+							for ($i=0; $i < $periods; $i++) { 
+								echo "<tr><td>" . money_format("%(#10.2n",$monthly) . "</td>";
+								echo "<td>Monthly Payment</td>";
+								echo "<td>Due Date</td></tr>";
+							}
+						}
 
-	} else {
-
-		for ($i=0; $i < $periods; $i++) { 
-			echo "<tr><td>" . $monthly . "</td>";
-			echo "<td>Monthly Payment</td>";
-			echo "<td>Due Date</td></tr>";
-		}
-	}
-
-?>
-</table>
+					?>
+				</tbody>
+			</table>
+	</div>	<!--table responsive -->
+<div> <!--container -->
 </body>
 </html>
 
