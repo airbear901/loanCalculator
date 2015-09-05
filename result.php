@@ -10,6 +10,9 @@ $bootcamp = $_POST["bootcamp"];
 $startDate = $_POST["startDate"];
 $d = new DateTime( $_POST["startDate"] );
 
+$today = new DateTime();
+
+
 if ($_POST["bootcamp"] == "Part-Time Front-End Bootcamp") {
 	$tuition = 6000;
 } elseif ($_POST["bootcamp"] == "Java Bootcamp" || $_POST["bootcamp"] == "Front-End (Javscript) Bootcamp") {
@@ -20,7 +23,9 @@ if ($_POST["bootcamp"] == "Part-Time Front-End Bootcamp") {
 	$tuition = 8500;
 }
 
+
 $discount = $_POST["discount"];
+$cTuition = $tuition - $discount;
 $deposit = $_POST["deposit"];
 
 if(isset($_POST['depositPaid'])) {
@@ -35,6 +40,9 @@ $periods = $_POST["periods"];
 $gPeriods = $_POST["gPeriods"];
 $gAmount = $_POST["gAmount"];
 $principal = $tuition - $discount - $deposit;
+
+
+
 $a = payment($apr,$periods,$principal);
 
 
@@ -67,10 +75,37 @@ if ($discount != 0 && $apr == 0) {
 	
 ?>
 <div class="container">
+	<div class="row">
+		<div class="col-xs-12 col-md-3 col-md-offset-9">
+			<p><?php echo "Prepared: " . $today->format( 'm/d/Y' ); ?></p>
+		</div>
+	</div>
 	<h1>Deferred Payment Plan <?php if($name) { echo "for " . $name;} else {} ?></h1>
 	<h3><?php echo $bootcamp . " " . $d->format( 'm/d/Y' ); ?></h3>
 	<h3><?php // echo $email; ?></h3>
 		<div class="table-responsive">
+			<table class="table table-bordered">
+				<tbody>
+					<tr id="tuition">
+						<td><?php echo money_format("%(#10.2n",$tuition); ?></td>
+						<td>Regular Course Tuition</td>
+					</tr>
+					<? if ($discount != 0): ?>
+					<tr>
+						<td>(<?php echo money_format("%(#10.2n",$discount); ?>)</td>
+						<td>Discount / Scholarship</td>
+					</tr>
+					<? endif; ?>
+					<? if ($discount != 0): ?>
+					<tr>
+						<td><?php echo money_format("%(#10.2n",$cTuition); ?></td>
+						<td>Custom Tuition  <?php if($name) { echo "for " . $name;} else {} ?></td>
+					</tr>
+					<? endif; ?>
+				</tbody>	
+			</table>
+			<br>
+			<h2>Financing Details</h2>
 			<table class="table table-bordered">
 				<thead>
 					<tr>
@@ -80,25 +115,7 @@ if ($discount != 0 && $apr == 0) {
 					</tr>
 				</thead>
 				<tbody>
-					<tr id="tuition">
-						<td><?php echo money_format("%(#10.2n",$tuition); ?></td>
-						<td>Regular Course Tuition</td>
-						<td></td>
-					</tr>
-					<? if ($discount != 0): ?>
-					<tr>
-						<td>(<?php echo money_format("%(#10.2n",$discount); ?>)</td>
-						<td>Discount / Scholarship</td>
-						<td></td>
-					</tr>
-					<? endif; ?>
-					<? if ($discount != 0): ?>
-					<tr>
-						<td><?php echo money_format("%(#10.2n",$open); ?></td>
-						<td>Custom Tuition  <?php echo $name; ?></td>
-						<td></td>
-					</tr>
-					<? endif; ?>
+					
 					<tr>
 						<td>
 							<?php 
@@ -120,11 +137,11 @@ if ($discount != 0 && $apr == 0) {
 							?>
 						</td>
 					</tr>		
-					<!-- <tr>
+					<tr>
 						<td><?php echo money_format("%(#10.2n",$principal); ?></td>
 						<td>Loan Amount</td>
 						<td></td>
-					</tr> -->
+					</tr>
 					<tr>
 						<td><?php echo ($apr * 100). "%"; ?></td>
 						<td>Interest Rate</td>
