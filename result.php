@@ -4,14 +4,14 @@ include 'includes/functions.php';
 
 //declare variables
 setlocale(LC_MONETARY, 'en_US');
+date_default_timezone_set('US/Eastern');
+
+$currentDate = date('m/d/Y');
 $name = $_POST["name"];
 $email = $_POST["email"];
 $bootcamp = $_POST["bootcamp"];
 $startDate = $_POST["startDate"];
 $d = new DateTime( $_POST["startDate"] );
-
-$today = new DateTime();
-
 
 if ($_POST["bootcamp"] == "Part-Time Front-End Bootcamp") {
 	$tuition = 6000;
@@ -22,7 +22,6 @@ if ($_POST["bootcamp"] == "Part-Time Front-End Bootcamp") {
 } else {
 	$tuition = 8500;
 }
-
 
 $discount = $_POST["discount"];
 $cTuition = $tuition - $discount;
@@ -40,12 +39,7 @@ $periods = $_POST["periods"];
 $gPeriods = $_POST["gPeriods"];
 $gAmount = $_POST["gAmount"];
 $principal = $tuition - $discount - $deposit;
-
-
-
 $a = payment($apr,$periods,$principal);
-
-
 
 if (isset($_POST["discount"])){
 	
@@ -77,7 +71,7 @@ if ($discount != 0 && $apr == 0) {
 <div class="container">
 	<div class="row">
 		<div class="col-xs-12 col-md-3 col-md-offset-9">
-			<p><?php echo "Prepared: " . $today->format( 'm/d/Y' ); ?></p>
+			<p><?php echo "Prepared: " . $currentDate; ?></p>
 		</div>
 	</div>
 	<h1>Deferred Payment Plan <?php if($name) { echo "for " . $name;} else {} ?></h1>
