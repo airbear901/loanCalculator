@@ -21,21 +21,48 @@ if ($_POST["bootcamp"] == "Part-Time Front-End Bootcamp") {
 }
 
 $discount = $_POST["discount"];
-$open = $tuition - $discount;
 $deposit = $_POST["deposit"];
+
+if(isset($_POST['depositPaid'])) {
+	    $open = $tuition - $discount - $deposit;
+
+	} else {
+	    $open = $tuition - $discount;
+	}   
+
 $apr = $_POST["apr"] / 100;
 $periods = $_POST["periods"];
 $gPeriods = $_POST["gPeriods"];
 $gAmount = $_POST["gAmount"];
 $principal = $tuition - $discount - $deposit;
+$a = payment($apr,$periods,$principal);
 
-if ($gPeriods != 0){
-	$a = payment($apr,$periods,$principal);
+
+
+if (isset($_POST["discount"])){
+	
+	$monthly = (($a * $periods) - ($gPeriods * $gAmount)) / ($periods - $gPeriods);
+	$total = $a * $periods + $deposit;
+} else {
+	$monthly = payment($apr,$periods,$principal);
+	$total = $open * $periods + $deposit;
+}
+
+if (isset($_POST["gPeriods"])){
+	//$a = payment($apr,$periods,$principal);
 	$monthly = (($a * $periods) - ($gPeriods * $gAmount)) / ($periods - $gPeriods);
 	$total = $a * $periods + $deposit;
 } else {
 	$monthly = payment($apr,$periods,$principal);
 	$total = $monthly * $periods + $deposit;
+}
+
+if ($discount != 0 && $apr == 0) {
+	$total = $tuition - $discount;
+} elseif ($discount == 0 && $apr == 0) {
+	$total = $tuition;
+} else {
+	$total = $a * $periods + $deposit;
 }
 	
 ?>
@@ -55,40 +82,49 @@ if ($gPeriods != 0){
 				<tbody>
 					<tr id="tuition">
 						<td><?php echo money_format("%(#10.2n",$tuition); ?></td>
-						<td>Course Tuition</td>
+						<td>Regular Course Tuition</td>
 						<td></td>
 					</tr>
+					<? if ($discount != 0): ?>
 					<tr>
-						<td><?php echo money_format("%(#10.2n",$discount); ?></td>
+						<td>(<?php echo money_format("%(#10.2n",$discount); ?>)</td>
 						<td>Discount / Scholarship</td>
 						<td></td>
 					</tr>
+					<? endif; ?>
+					<? if ($discount != 0): ?>
 					<tr>
 						<td><?php echo money_format("%(#10.2n",$open); ?></td>
-						<td>Open Balance</td>
+						<td>Custom Tuition  <?php echo $name; ?></td>
 						<td></td>
 					</tr>
+					<? endif; ?>
 					<tr>
-						<td><?php echo money_format("%(#10.2n",$deposit); ?></td>
+						<td>
+							<?php 
+								if(isset($_POST['depositPaid'])) {
+									    echo money_format("%(#10.2n",-$deposit);
+									} else {
+									    echo money_format("%(#10.2n",$deposit);
+									}
+							?>
+						</td>
 						<td>Deposit</td>
 						<td>
 							<?php 
-								if(isset($_POST['depositPaid'])) 
-								{
+								if(isset($_POST['depositPaid'])) {
 								    echo "Paid";
-								}
-								else
-								{
+								} else {
 								    echo "Due Immediately";
 								}    
 							?>
 						</td>
-					</tr>
-					<tr>
+					</tr>		
+					<!-- <tr>
 						<td><?php echo money_format("%(#10.2n",$principal); ?></td>
 						<td>Loan Amount</td>
 						<td></td>
-					</tr>
+					</tr> -->
 					<tr>
 						<td><?php echo ($apr * 100). "%"; ?></td>
 						<td>Interest Rate</td>
@@ -130,7 +166,12 @@ if ($gPeriods != 0){
 					</tr>
 				</thead>
 				<tbody>
-					<?php				
+					<?php
+						if(!isset($_POST['depositPaid'])) {
+								echo "<tr><td>" . money_format("%(#10.2n",$deposit) . "</td>";
+								echo "<td>Deposit</td>";
+								echo "<td>Due Immediately</td></tr>";
+							}  				
 						
 						if ($gPeriods != 0) {
 							
